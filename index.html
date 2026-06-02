@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wamu Tetris</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="menuScreen" class="screen screen-active">
+        <div class="brand-panel">
+          <p class="eyebrow">Wamu Cafe game table</p>
+          <h1>Wamu Tetris</h1>
+          <p class="lede">A bright multiplayer block game for kids, families, and cafe events.</p>
+        </div>
+
+        <form id="setupForm" class="setup-panel">
+          <fieldset>
+            <legend>Mode</legend>
+            <div class="segmented">
+              <label>
+                <input type="radio" name="mode" value="individual" checked />
+                <span>Individual</span>
+              </label>
+              <label>
+                <input type="radio" name="mode" value="vs" />
+                <span>VS</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset id="playerCountFieldset">
+            <legend>Players</legend>
+            <div class="segmented compact">
+              <label>
+                <input type="radio" name="players" value="2" checked />
+                <span>2 pax</span>
+              </label>
+              <label>
+                <input type="radio" name="players" value="3" />
+                <span>3 pax</span>
+              </label>
+              <label>
+                <input type="radio" name="players" value="4" />
+                <span>4 pax</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div id="playerFields" class="player-fields"></div>
+
+          <button class="primary-button" type="submit">Start Game</button>
+        </form>
+      </section>
+
+      <section id="gameScreen" class="screen">
+        <header class="game-header">
+          <div>
+            <p id="modeLabel" class="eyebrow">Individual mode</p>
+            <h2>Wamu Tetris</h2>
+          </div>
+          <div class="header-actions">
+            <button id="pauseButton" class="secondary-button" type="button">Pause</button>
+            <button id="menuButton" class="secondary-button" type="button">Menu</button>
+          </div>
+        </header>
+
+        <div id="boards" class="boards"></div>
+      </section>
+
+      <section id="resultScreen" class="screen">
+        <div class="result-card">
+          <p class="eyebrow">Match complete</p>
+          <h2 id="winnerTitle">Winner</h2>
+          <ol id="rankingList" class="ranking-list"></ol>
+          <div class="result-actions">
+            <button id="restartButton" class="primary-button" type="button">Restart</button>
+            <button id="backButton" class="secondary-button" type="button">Back to Menu</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
