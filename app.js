@@ -53,10 +53,10 @@ const resultScreen = document.querySelector("#resultScreen");
 const setupForm = document.querySelector("#setupForm");
 const playerFields = document.querySelector("#playerFields");
 const playerCountFieldset = document.querySelector("#playerCountFieldset");
-const roomActionFieldset = document.querySelector("#roomActionFieldset");
 const joinRoomField = document.querySelector("#joinRoomField");
 const roomCodeInput = document.querySelector("#roomCodeInput");
 const submitButton = document.querySelector("#submitButton");
+const roomActionButtons = document.querySelector("#roomActionButtons");
 const boardsEl = document.querySelector("#boards");
 const modeLabel = document.querySelector("#modeLabel");
 const pauseButton = document.querySelector("#pauseButton");
@@ -70,6 +70,7 @@ let state = null;
 let animationId = 0;
 let lastFrame = 0;
 let audioContext = null;
+let selectedRoomAction = "create";
 
 function makeEmptyBoard() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(""));
@@ -514,11 +515,11 @@ function buildPlayerFields() {
   const mode = data.get("mode");
   const count = mode === "individual" ? 1 : Number(data.get("players"));
   playerCountFieldset.hidden = mode === "individual";
-  roomActionFieldset.hidden = mode === "individual";
-  joinRoomField.hidden = mode !== "multiplayer" || data.get("roomAction") !== "join";
+  submitButton.hidden = mode === "multiplayer";
+  roomActionButtons.hidden = mode !== "multiplayer";
+  if (mode !== "multiplayer") selectedRoomAction = "create";
+  joinRoomField.hidden = mode !== "multiplayer" || selectedRoomAction !== "join";
   roomCodeInput.required = !joinRoomField.hidden;
-  submitButton.textContent =
-    mode === "individual" ? "Start Game" : data.get("roomAction") === "join" ? "Join Room" : "Create Room";
   const existing = Array.from(playerFields.querySelectorAll(".player-row")).map((row) => ({
     name: row.querySelector('input[type="text"]').value,
     color: row.querySelector('input[type="color"]').value,
@@ -541,7 +542,7 @@ function collectSetup() {
   const data = new FormData(setupForm);
   const selectedMode = data.get("mode");
   const mode = selectedMode === "multiplayer" ? "vs" : "individual";
-  const roomAction = data.get("roomAction");
+  const roomAction = selectedRoomAction;
   const count = mode === "individual" ? 1 : Number(data.get("players"));
   const enteredCode = String(data.get("roomCode") || "").trim().toUpperCase();
   return {
@@ -672,7 +673,7 @@ function escapeHtml(value) {
 }
 
 setupForm.addEventListener("change", (event) => {
-  if (event.target.name === "players" || event.target.name === "mode" || event.target.name === "roomAction") {
+  if (event.target.name === "players" || event.target.name === "mode") {
     buildPlayerFields();
   }
 });
@@ -680,7 +681,16 @@ setupForm.addEventListener("change", (event) => {
 setupForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(setupForm);
-  if (data.get("mode") === "multiplayer" && data.get("roomAction") === "join") {
+  const requestedRoomAction = event.submitter?.name === "roomAction" ? event.submitter.value : selectedRoomAction;
+  if (data.get("mode") === "multiplayer") selectedRoomAction = requestedRoomAction;
+
+  if (data.get("mode") === "multiplayer" && selectedRoomAction === "join" && joinRoomField.hidden) {
+    buildPlayerFields();
+    roomCodeInput.focus();
+    return;
+  }
+
+  if (data.get("mode") === "multiplayer" && selectedRoomAction === "join") {
     const roomCode = roomCodeInput.value.trim().toUpperCase();
     if (!/^[A-Z0-9]{6}$/.test(roomCode)) {
       roomCodeInput.setCustomValidity("Enter a 6-character room code.");

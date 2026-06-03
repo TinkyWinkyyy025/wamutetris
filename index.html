@@ -33,20 +33,6 @@
             </div>
           </fieldset>
 
-          <fieldset id="roomActionFieldset">
-            <legend>Room</legend>
-            <div class="segmented">
-              <label>
-                <input type="radio" name="roomAction" value="create" checked />
-                <span>Create Room</span>
-              </label>
-              <label>
-                <input type="radio" name="roomAction" value="join" />
-                <span>Join Room</span>
-              </label>
-            </div>
-          </fieldset>
-
           <div id="joinRoomField" class="room-code-field" hidden>
             <label class="field-label" for="roomCodeInput">Room Code</label>
             <input id="roomCodeInput" type="text" name="roomCode" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off" placeholder="ABC123" />
@@ -73,6 +59,10 @@
           <div id="playerFields" class="player-fields"></div>
 
           <button id="submitButton" class="primary-button" type="submit">Start Game</button>
+          <div id="roomActionButtons" class="room-action-buttons" hidden>
+            <button class="primary-button" type="submit" name="roomAction" value="create">Create Room</button>
+            <button class="secondary-button" type="submit" name="roomAction" value="join">Join Room</button>
+          </div>
         </form>
       </section>
 
