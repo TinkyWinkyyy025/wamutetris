@@ -424,6 +424,33 @@ legend,
   line-height: 1;
 }
 
+.soft-drop-icon {
+  position: relative;
+  display: block;
+  width: 15px;
+  height: 17px;
+}
+
+.soft-drop-icon::before,
+.soft-drop-icon::after {
+  position: absolute;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.soft-drop-icon::before {
+  top: 0;
+}
+
+.soft-drop-icon::after {
+  top: 7px;
+}
+
 .status-line {
   min-height: 16px;
   margin: 5px 0 0;
