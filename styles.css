@@ -1,17 +1,17 @@
 :root {
   color-scheme: light;
-  --ink: #2f3437;
-  --muted: #777f86;
-  --paper: #f6f3ee;
-  --panel: #ffffff;
-  --line: #ded9d0;
-  --mint: #bfd8cc;
-  --peach: #ead0bd;
-  --lemon: #ebe0b7;
-  --sky: #c6d9e6;
-  --rose: #e4c3cc;
-  --violet: #d2cbe3;
-  --shadow: 0 14px 32px rgba(47, 52, 55, 0.1);
+  --ink: #4a403d;
+  --muted: #7a7370;
+  --paper: #f3e6df;
+  --panel: #fffaf7;
+  --line: #d9d2c6;
+  --mint: #c7ccc8;
+  --peach: #e3bea6;
+  --lemon: #ead9cc;
+  --sky: #9fabaf;
+  --rose: #b58171;
+  --violet: #c9c1bd;
+  --shadow: 0 14px 32px rgba(74, 64, 61, 0.1);
   --shell-pad: clamp(10px, 2vw, 24px);
   --board-size: clamp(82px, min(calc(50vh - 125px), calc(100vw - 44px)), 390px);
   --duo-board-size: clamp(64px, min(calc(50vh - 143px), calc(50vw - 23px)), 330px);
@@ -110,7 +110,7 @@ button {
 
 .eyebrow {
   margin: 0 0 10px;
-  color: #7f7060;
+  color: #8c6a5d;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0;
@@ -181,8 +181,8 @@ legend,
 }
 
 .segmented input:checked + span {
-  border-color: #7f8f85;
-  background: #e9eee8;
+  border-color: #b58171;
+  background: #f3e6df;
 }
 
 .player-fields {
@@ -232,9 +232,9 @@ legend,
 
 .primary-button {
   width: 100%;
-  background: #68786f;
+  background: #b58171;
   color: #fffdf8;
-  box-shadow: 0 10px 18px rgba(47, 52, 55, 0.12);
+  box-shadow: 0 10px 18px rgba(181, 129, 113, 0.22);
 }
 
 .secondary-button {
@@ -326,7 +326,7 @@ legend,
 .pill {
   padding: 3px 6px;
   border-radius: 999px;
-  background: #f0eee9;
+  background: #f3e6df;
   color: var(--ink);
   font-size: 11px;
   font-weight: 700;
@@ -360,18 +360,18 @@ legend,
 .mini-canvas {
   width: 38px;
   height: 38px;
-  border: 2px solid #e7e3dc;
+  border: 2px solid #d9d2c6;
   border-radius: 8px;
-  background: #fbfaf7;
+  background: #fffaf7;
 }
 
 .line-clear-wrap {
   display: grid;
   min-height: 38px;
   place-items: center;
-  border: 2px solid #e7e3dc;
+  border: 2px solid #d9d2c6;
   border-radius: 8px;
-  background: #f4efe3;
+  background: #f3e6df;
 }
 
 .line-clear-wrap strong {
@@ -394,9 +394,9 @@ legend,
   height: auto;
   margin: 0 auto;
   aspect-ratio: 1 / 2;
-  border: 3px solid #5f6b64;
+  border: 3px solid #9fabaf;
   border-radius: 8px;
-  background: #fffdfa;
+  background: #fffaf7;
   touch-action: none;
 }
 
@@ -411,7 +411,7 @@ legend,
   min-height: 34px;
   border: 0;
   border-radius: 8px;
-  background: #edf1ef;
+  background: #c7ccc8;
   color: var(--ink);
   font-size: 12px;
   font-weight: 700;
@@ -420,7 +420,7 @@ legend,
 .status-line {
   min-height: 16px;
   margin: 5px 0 0;
-  color: #8a5d61;
+  color: #b58171;
   font-size: 12px;
   font-weight: 700;
 }
@@ -452,7 +452,7 @@ legend,
 .ranking-list li {
   padding: 10px 12px;
   border-radius: 8px;
-  background: #f3f1ec;
+  background: #f3e6df;
 }
 
 .result-actions {
