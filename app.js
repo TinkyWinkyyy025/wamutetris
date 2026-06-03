@@ -48,7 +48,6 @@ const menuScreen = document.querySelector("#menuScreen");
 const gameScreen = document.querySelector("#gameScreen");
 const resultScreen = document.querySelector("#resultScreen");
 const setupForm = document.querySelector("#setupForm");
-const playerFields = document.querySelector("#playerFields");
 const boardsEl = document.querySelector("#boards");
 const modeLabel = document.querySelector("#modeLabel");
 const pauseButton = document.querySelector("#pauseButton");
@@ -471,37 +470,19 @@ function resolveKeyAction(code) {
   return { player: state.players[0], action };
 }
 
-function buildPlayerFields() {
-  const existingRow = playerFields.querySelector(".player-row");
-  const existing = {
-    name: existingRow?.querySelector('input[type="text"]').value,
-    color: existingRow?.querySelector('input[type="color"]').value,
-  };
-  playerFields.innerHTML = "";
-  const row = document.createElement("div");
-  row.className = "player-row";
-  row.innerHTML = `
-    <label class="field-label" for="playerName0">Player</label>
-    <input id="playerName0" type="text" name="name0" value="${escapeHtml(existing.name || "Player 1")}" maxlength="16" placeholder="Player 1" />
-    <input class="color-choice" type="color" name="color0" value="${existing.color || COLORS[0]}" aria-label="Player colour" />
-  `;
-  playerFields.append(row);
-}
-
-function collectSetup() {
-  const data = new FormData(setupForm);
+function createDefaultConfig() {
   return {
     mode: "individual",
     players: [
       {
-        name: String(data.get("name0") || "").trim() || "Player 1",
-        accent: data.get("color0") || COLORS[0],
+        name: "Player",
+        accent: COLORS[0],
       },
     ],
   };
 }
 
-function startGame(config = collectSetup()) {
+function startGame(config = createDefaultConfig()) {
   cancelAnimationFrame(animationId);
   boardsEl.innerHTML = "";
   boardsEl.dataset.count = config.players.length;
@@ -602,12 +583,7 @@ function escapeHtml(value) {
 
 setupForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  playerFields.querySelectorAll('input[type="text"]').forEach((input) => input.setCustomValidity(""));
   startGame();
-});
-
-playerFields.addEventListener("input", (event) => {
-  if (event.target.matches('input[type="text"]')) event.target.setCustomValidity("");
 });
 
 pauseButton.addEventListener("click", () => {
@@ -639,5 +615,3 @@ window.addEventListener("keydown", (event) => {
   performAction(resolved.player, resolved.action);
   render();
 });
-
-buildPlayerFields();

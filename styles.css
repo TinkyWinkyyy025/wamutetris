@@ -148,8 +148,7 @@ fieldset {
   border: 0;
 }
 
-legend,
-.field-label {
+legend {
   display: block;
   margin: 0 0 7px;
   color: var(--ink);
@@ -191,43 +190,6 @@ legend,
 .segmented input:checked + span {
   border-color: #d9a99b;
   background: #fbf1ed;
-}
-
-.player-fields {
-  display: grid;
-  gap: 8px;
-  margin: 0 0 14px;
-}
-
-.player-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: center;
-}
-
-.player-row .field-label {
-  margin: 0;
-}
-
-.player-row input[type="text"] {
-  min-width: 0;
-  height: 40px;
-  padding: 0 14px;
-  border: 2px solid var(--line);
-  border-radius: 8px;
-  background: #fff;
-  color: var(--ink);
-  font-weight: 600;
-}
-
-.color-choice {
-  width: 40px;
-  height: 40px;
-  padding: 4px;
-  border: 2px solid var(--line);
-  border-radius: 8px;
-  background: #fff;
 }
 
 .primary-button,
@@ -633,8 +595,6 @@ legend,
   }
 
   .segmented span,
-  .player-row input[type="text"],
-  .color-choice,
   .primary-button,
   .secondary-button {
     min-height: 32px;
