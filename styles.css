@@ -283,13 +283,13 @@ legend,
 }
 
 .boards[data-count="1"] {
-  max-width: calc(var(--board-size) + 48px);
-  grid-template-columns: minmax(0, calc(var(--board-size) + 48px));
+  max-width: calc(var(--board-size) + 96px);
+  grid-template-columns: minmax(0, calc(var(--board-size) + 96px));
 }
 
 .boards[data-count="2"] {
-  max-width: calc(var(--duo-board-size) + var(--duo-board-size) + 110px);
-  grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 48px)));
+  max-width: calc(var(--duo-board-size) + var(--duo-board-size) + 206px);
+  grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 96px)));
 }
 
 .player-card {
@@ -343,6 +343,14 @@ legend,
   text-align: center;
 }
 
+.hold-stack {
+  justify-content: end;
+}
+
+.next-stack {
+  justify-content: start;
+}
+
 .mini-wrap span {
   display: block;
   margin-bottom: 3px;
@@ -362,7 +370,7 @@ legend,
 
 .board-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
   gap: 6px;
   align-items: start;
 }
@@ -378,6 +386,12 @@ legend,
   border-radius: 8px;
   background: #fffdf8;
   touch-action: none;
+}
+
+.bottom-stats {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
 }
 
 .touch-controls {
@@ -490,8 +504,8 @@ legend,
   }
 
   .boards[data-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 36px)));
-    max-width: min(100%, calc(var(--duo-board-size) + var(--duo-board-size) + 84px));
+    grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 64px)));
+    max-width: min(100%, calc(var(--duo-board-size) + var(--duo-board-size) + 140px));
   }
 
   .boards[data-count="2"] .board-canvas {
@@ -507,12 +521,12 @@ legend,
   }
 
   .boards[data-count="2"] .board-row {
-    grid-template-columns: minmax(0, 1fr) 32px;
+    grid-template-columns: 30px minmax(0, 1fr) 30px;
   }
 
   .boards[data-count="2"] .preview-stack {
     display: grid;
-    grid-template-columns: 32px;
+    grid-template-columns: 30px;
     gap: 4px;
   }
 
@@ -555,7 +569,7 @@ legend,
 
 @media (min-width: 1180px) {
   .boards[data-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 48px)));
+    grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 96px)));
   }
 
   .boards[data-count="3"] {

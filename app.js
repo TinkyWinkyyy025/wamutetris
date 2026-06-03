@@ -184,9 +184,9 @@ function sendAttack(source, lines) {
 }
 
 function spawnPiece(player) {
-  player.piece = player.nextPiece;
+  player.piece = player.nextPieces.shift();
   resetPiecePosition(player.piece);
-  player.nextPiece = randomPiece();
+  player.nextPieces.push(randomPiece());
   player.canHold = true;
   if (collides(player)) eliminate(player, "Board topped out");
 }
@@ -373,7 +373,9 @@ function drawMiniPiece(ctx, canvas, piece) {
 
 function drawPreviews(player) {
   drawMiniPiece(player.holdCtx, player.holdCanvas, player.heldPiece);
-  drawMiniPiece(player.nextCtx, player.nextCanvas, player.nextPiece);
+  player.nextCanvases.forEach((canvas, index) => {
+    drawMiniPiece(player.nextCtxs[index], canvas, player.nextPieces[index]);
+  });
 }
 
 function updateHud(player) {
@@ -432,23 +434,31 @@ function createPlayerCard(player) {
         <h3 class="player-name">${escapeHtml(player.name)}</h3>
         <div class="stats">
           <span class="pill">Score <strong data-score>0</strong></span>
-          <span class="pill">Lines <strong data-lines>0</strong></span>
           <span class="pill">Level <strong data-level>1</strong></span>
         </div>
       </div>
     </div>
     <div class="board-row">
-      <canvas class="board-canvas" width="${COLS * CELL}" height="${ROWS * CELL}"></canvas>
-      <div class="preview-stack">
+      <div class="preview-stack hold-stack">
         <div class="mini-wrap">
           <span>Hold</span>
           <canvas class="mini-canvas hold-canvas" width="56" height="56"></canvas>
         </div>
+      </div>
+      <canvas class="board-canvas" width="${COLS * CELL}" height="${ROWS * CELL}"></canvas>
+      <div class="preview-stack next-stack">
         <div class="mini-wrap">
           <span>Next</span>
           <canvas class="mini-canvas next-canvas" width="56" height="56"></canvas>
         </div>
+        <div class="mini-wrap">
+          <span>Up</span>
+          <canvas class="mini-canvas next-canvas" width="56" height="56"></canvas>
+        </div>
       </div>
+    </div>
+    <div class="bottom-stats">
+      <span class="pill">Line clears <strong data-lines>0</strong></span>
     </div>
     <div class="touch-controls" aria-label="${escapeHtml(player.name)} controls">
       <button type="button" data-action="left">L</button>
@@ -549,7 +559,7 @@ function startGame(config = collectSetup()) {
       accent: item.accent,
       board: makeEmptyBoard(),
       piece: randomPiece(),
-      nextPiece: randomPiece(),
+      nextPieces: [randomPiece(), randomPiece()],
       heldPiece: null,
       canHold: true,
       score: 0,
@@ -566,8 +576,8 @@ function startGame(config = collectSetup()) {
     player.ctx = player.canvas.getContext("2d");
     player.holdCanvas = card.querySelector(".hold-canvas");
     player.holdCtx = player.holdCanvas.getContext("2d");
-    player.nextCanvas = card.querySelector(".next-canvas");
-    player.nextCtx = player.nextCanvas.getContext("2d");
+    player.nextCanvases = Array.from(card.querySelectorAll(".next-canvas"));
+    player.nextCtxs = player.nextCanvases.map((canvas) => canvas.getContext("2d"));
     boardsEl.append(card);
     state.players.push(player);
   });
