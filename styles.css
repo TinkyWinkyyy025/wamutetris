@@ -412,13 +412,16 @@ legend,
 }
 
 .touch-controls button {
+  display: grid;
+  place-items: center;
   min-height: 34px;
   border: 0;
   border-radius: 8px;
   background: #e4ece7;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 700;
+  line-height: 1;
 }
 
 .status-line {
@@ -575,11 +578,11 @@ legend,
   .boards[data-count="2"] .touch-controls button {
     min-height: 38px;
     padding: 0 4px;
-    font-size: 12px;
+    font-size: 18px;
   }
 
   .touch-controls button {
-    font-size: 12px;
+    font-size: 18px;
   }
 
   .result-actions {
@@ -678,7 +681,7 @@ legend,
 
   .touch-controls button {
     min-height: 26px;
-    font-size: 10px;
+    font-size: 14px;
   }
 
   .status-line {
@@ -720,7 +723,7 @@ legend,
   .touch-controls button {
     min-height: 30px;
     padding: 0 2px;
-    font-size: 10px;
+    font-size: 15px;
   }
 
   .boards[data-count="2"] {
@@ -737,6 +740,6 @@ legend,
 
   .boards[data-count="2"] .touch-controls button {
     min-height: 34px;
-    font-size: 11px;
+    font-size: 16px;
   }
 }
