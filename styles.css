@@ -77,6 +77,7 @@ button {
 #menuScreen {
   display: none;
   place-items: center;
+  justify-items: center;
   align-content: center;
   gap: clamp(14px, 3vh, 28px);
   text-align: center;
@@ -127,6 +128,12 @@ button {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: var(--shadow);
+}
+
+.setup-panel {
+  max-width: 460px;
+  justify-self: center;
+  text-align: center;
 }
 
 fieldset {
