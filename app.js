@@ -43,8 +43,10 @@ const PIECE_COLORS = {
 const KEYMAP = [
   { left: "ArrowLeft", right: "ArrowRight", rotate: "ArrowUp", rotateBack: "KeyZ", softDrop: "ArrowDown", drop: "Space", hold: "KeyC" },
   { left: "KeyA", right: "KeyD", rotate: "KeyW", rotateBack: "KeyS", softDrop: "KeyX", drop: "KeyV", hold: "KeyB" },
-  { left: "KeyJ", right: "KeyL", rotate: "KeyI", rotateBack: "KeyK", drop: "KeyU", hold: "KeyO" },
-  { left: "Numpad4", right: "Numpad6", rotate: "Numpad8", rotateBack: "Numpad5", drop: "Numpad0", hold: "Numpad7" },
+  { left: "KeyJ", right: "KeyL", rotate: "KeyI", rotateBack: "KeyK", softDrop: "KeyM", drop: "KeyU", hold: "KeyO" },
+  { left: "Numpad4", right: "Numpad6", rotate: "Numpad8", rotateBack: "Numpad5", softDrop: "Numpad2", drop: "Numpad0", hold: "Numpad7" },
+  { left: "Digit1", right: "Digit3", rotate: "Digit2", rotateBack: "KeyQ", softDrop: "Digit4", drop: "Digit5", hold: "Digit6" },
+  { left: "KeyF", right: "KeyH", rotate: "KeyT", rotateBack: "KeyR", softDrop: "KeyG", drop: "KeyY", hold: "Digit7" },
 ];
 
 const menuScreen = document.querySelector("#menuScreen");
@@ -52,7 +54,6 @@ const gameScreen = document.querySelector("#gameScreen");
 const resultScreen = document.querySelector("#resultScreen");
 const setupForm = document.querySelector("#setupForm");
 const playerFields = document.querySelector("#playerFields");
-const playerCountFieldset = document.querySelector("#playerCountFieldset");
 const joinRoomField = document.querySelector("#joinRoomField");
 const roomCodeInput = document.querySelector("#roomCodeInput");
 const submitButton = document.querySelector("#submitButton");
@@ -500,6 +501,7 @@ function performAction(player, action) {
 function resolveKeyAction(code) {
   const playerIndex = KEYMAP.findIndex((map) => Object.values(map).includes(code));
   if (playerIndex < 0) return null;
+  if (!state.players[playerIndex]) return null;
   const map = KEYMAP[playerIndex];
   const action = Object.entries(map).find(([, mappedCode]) => mappedCode === code)?.[0];
   if (!action) return null;
@@ -513,8 +515,8 @@ function resolveKeyAction(code) {
 function buildPlayerFields() {
   const data = new FormData(setupForm);
   const mode = data.get("mode");
-  const count = mode === "individual" ? 1 : Number(data.get("players"));
-  playerCountFieldset.hidden = mode === "individual";
+  const count = mode === "individual" ? 1 : 6;
+  playerFields.dataset.mode = mode;
   submitButton.hidden = mode === "multiplayer";
   roomActionButtons.hidden = mode !== "multiplayer";
   if (mode !== "multiplayer") selectedRoomAction = "create";
@@ -529,9 +531,11 @@ function buildPlayerFields() {
     const row = document.createElement("div");
     row.className = "player-row";
     const inputId = `playerName${i}`;
+    const defaultName = mode === "individual" || i < 2 ? `Player ${i + 1}` : "";
+    const placeholder = mode === "individual" || i < 2 ? `Player ${i + 1}` : `Open slot ${i + 1}`;
     row.innerHTML = `
-      <label class="field-label" for="${inputId}">Player ${i + 1}</label>
-      <input id="${inputId}" type="text" name="name${i}" value="${escapeHtml(existing[i]?.name || `Player ${i + 1}`)}" maxlength="16" />
+      <label class="field-label" for="${inputId}">${mode === "individual" ? "Player" : `Slot ${i + 1}`}</label>
+      <input id="${inputId}" type="text" name="name${i}" value="${escapeHtml(existing[i]?.name ?? defaultName)}" maxlength="16" placeholder="${escapeHtml(placeholder)}" />
       <input class="color-choice" type="color" name="color${i}" value="${existing[i]?.color || COLORS[i]}" aria-label="Player ${i + 1} colour" />
     `;
     playerFields.append(row);
@@ -543,16 +547,22 @@ function collectSetup() {
   const selectedMode = data.get("mode");
   const mode = selectedMode === "multiplayer" ? "vs" : "individual";
   const roomAction = selectedRoomAction;
-  const count = mode === "individual" ? 1 : Number(data.get("players"));
+  const count = mode === "individual" ? 1 : 6;
   const enteredCode = String(data.get("roomCode") || "").trim().toUpperCase();
+  const players = Array.from({ length: count }, (_, index) => {
+    const name = String(data.get(`name${index}`) || "").trim();
+    if (mode === "vs" && !name) return null;
+    return {
+      name: name || `Player ${index + 1}`,
+      accent: data.get(`color${index}`) || COLORS[index],
+    };
+  }).filter(Boolean);
+
   return {
     mode,
     roomAction: mode === "vs" ? roomAction : null,
     roomCode: mode === "vs" ? (roomAction === "join" ? enteredCode : generateRoomCode()) : "",
-    players: Array.from({ length: count }, (_, index) => ({
-      name: (data.get(`name${index}`) || `Player ${index + 1}`).trim() || `Player ${index + 1}`,
-      accent: data.get(`color${index}`) || COLORS[index],
-    })),
+    players,
   };
 }
 
@@ -681,6 +691,7 @@ setupForm.addEventListener("change", (event) => {
 setupForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(setupForm);
+  playerFields.querySelectorAll('input[type="text"]').forEach((input) => input.setCustomValidity(""));
   const requestedRoomAction = event.submitter?.name === "roomAction" ? event.submitter.value : selectedRoomAction;
   if (data.get("mode") === "multiplayer") selectedRoomAction = requestedRoomAction;
 
@@ -700,12 +711,25 @@ setupForm.addEventListener("submit", (event) => {
     roomCodeInput.value = roomCode;
   }
   roomCodeInput.setCustomValidity("");
+  if (data.get("mode") === "multiplayer") {
+    const filledPlayers = Array.from({ length: 6 }, (_, index) => String(data.get(`name${index}`) || "").trim()).filter(Boolean);
+    if (filledPlayers.length < 2) {
+      const playerInput = setupForm.querySelector('input[name="name1"]');
+      playerInput.setCustomValidity("Add at least 2 players to start.");
+      playerInput.reportValidity();
+      return;
+    }
+  }
   startGame();
 });
 
 roomCodeInput.addEventListener("input", () => {
   roomCodeInput.setCustomValidity("");
   roomCodeInput.value = roomCodeInput.value.toUpperCase();
+});
+
+playerFields.addEventListener("input", (event) => {
+  if (event.target.matches('input[type="text"]')) event.target.setCustomValidity("");
 });
 
 pauseButton.addEventListener("click", () => {

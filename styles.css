@@ -17,6 +17,7 @@
   --duo-board-size: clamp(64px, min(calc(50vh - 143px), calc(50vw - 23px)), 330px);
   --board-size: clamp(82px, min(calc(50dvh - 125px), calc(100vw - 44px)), 390px);
   --duo-board-size: clamp(64px, min(calc(50dvh - 143px), calc(50vw - 23px)), 330px);
+  --multi-board-size: clamp(52px, min(calc(50dvh - 128px), calc(16vw - 22px)), 170px);
 }
 
 * {
@@ -225,6 +226,11 @@ legend,
   margin: 0 0 14px;
 }
 
+.player-fields[data-mode="multiplayer"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
 .player-row {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -232,8 +238,17 @@ legend,
   align-items: center;
 }
 
+.player-fields[data-mode="multiplayer"] .player-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
 .player-row .field-label {
   margin: 0;
+}
+
+.player-fields[data-mode="multiplayer"] .field-label {
+  display: none;
 }
 
 .player-row input[type="text"] {
@@ -321,6 +336,50 @@ legend,
 .boards[data-count="2"] {
   max-width: calc(var(--duo-board-size) + var(--duo-board-size) + 206px);
   grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 96px)));
+}
+
+.boards[data-count="3"],
+.boards[data-count="4"],
+.boards[data-count="5"],
+.boards[data-count="6"] {
+  max-width: 100%;
+}
+
+.boards[data-count="3"] {
+  grid-template-columns: repeat(3, minmax(0, calc(var(--multi-board-size) + 18px)));
+}
+
+.boards[data-count="4"] {
+  grid-template-columns: repeat(4, minmax(0, calc(var(--multi-board-size) + 18px)));
+}
+
+.boards[data-count="5"] {
+  grid-template-columns: repeat(5, minmax(0, calc(var(--multi-board-size) + 18px)));
+}
+
+.boards[data-count="6"] {
+  grid-template-columns: repeat(6, minmax(0, calc(var(--multi-board-size) + 18px)));
+}
+
+.boards[data-count="3"] .board-canvas,
+.boards[data-count="4"] .board-canvas,
+.boards[data-count="5"] .board-canvas,
+.boards[data-count="6"] .board-canvas {
+  max-width: var(--multi-board-size);
+}
+
+.boards[data-count="3"] .board-row,
+.boards[data-count="4"] .board-row,
+.boards[data-count="5"] .board-row,
+.boards[data-count="6"] .board-row {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.boards[data-count="3"] .preview-stack,
+.boards[data-count="4"] .preview-stack,
+.boards[data-count="5"] .preview-stack,
+.boards[data-count="6"] .preview-stack {
+  display: none;
 }
 
 .player-card {
@@ -626,18 +685,18 @@ legend,
   }
 
   .boards[data-count="3"] {
-    max-width: calc(var(--board-size) + var(--board-size) + var(--board-size) + 36px);
-    grid-template-columns: repeat(3, minmax(0, var(--board-size)));
+    grid-template-columns: repeat(3, minmax(0, calc(var(--multi-board-size) + 18px)));
   }
 
   .boards[data-count="3"],
-  .boards[data-count="4"] {
+  .boards[data-count="4"],
+  .boards[data-count="5"],
+  .boards[data-count="6"] {
     justify-content: center;
   }
 
   .boards[data-count="4"] {
-    max-width: calc(var(--board-size) + var(--board-size) + var(--board-size) + var(--board-size) + 54px);
-    grid-template-columns: repeat(4, minmax(0, var(--board-size)));
+    grid-template-columns: repeat(4, minmax(0, calc(var(--multi-board-size) + 18px)));
   }
 }
 
@@ -648,6 +707,7 @@ legend,
     --duo-board-size: clamp(50px, min(calc(50vh - 118px), calc(50vw - 14px)), 240px);
     --board-size: clamp(68px, min(calc(50dvh - 100px), calc(100vw - 24px)), 320px);
     --duo-board-size: clamp(50px, min(calc(50dvh - 118px), calc(50vw - 14px)), 240px);
+    --multi-board-size: clamp(44px, min(calc(50dvh - 112px), calc(16vw - 18px)), 140px);
   }
 
   .brand-panel h1 {
@@ -740,6 +800,7 @@ legend,
     --duo-board-size: clamp(54px, min(calc(50vh - 126px), calc(50vw - 14px)), 260px);
     --board-size: clamp(70px, min(calc(50dvh - 105px), calc(100vw - 20px)), 360px);
     --duo-board-size: clamp(54px, min(calc(50dvh - 126px), calc(50vw - 14px)), 260px);
+    --multi-board-size: clamp(40px, min(calc(50dvh - 118px), calc(16vw - 16px)), 120px);
   }
 
   .segmented.compact {
