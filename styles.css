@@ -74,10 +74,13 @@ button {
 #menuScreen {
   display: none;
   place-items: center;
+  place-content: center;
   justify-items: center;
+  justify-content: center;
   align-content: center;
   gap: clamp(14px, 3vh, 28px);
   text-align: center;
+  width: 100%;
 }
 
 #menuScreen.screen-active {
@@ -88,6 +91,7 @@ button {
 .brand-panel {
   display: grid;
   justify-items: center;
+  width: min(100%, 560px);
 }
 
 .brand-panel h1 {
@@ -472,6 +476,8 @@ legend,
 
   #menuScreen.screen-active {
     grid-template-columns: 1fr;
+    place-content: center;
+    justify-items: center;
   }
 
   .brand-panel h1 {
