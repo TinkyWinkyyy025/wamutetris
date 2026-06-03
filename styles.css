@@ -76,19 +76,26 @@ button {
 
 #menuScreen {
   display: none;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
-  gap: clamp(14px, 3vw, 36px);
-  align-items: center;
+  place-items: center;
+  align-content: center;
+  gap: clamp(14px, 3vh, 28px);
+  text-align: center;
 }
 
 #menuScreen.screen-active {
   display: grid;
+  grid-template-columns: minmax(0, 560px);
+}
+
+.brand-panel {
+  display: grid;
+  justify-items: center;
 }
 
 .brand-panel h1 {
   max-width: 720px;
   margin: 0;
-  font-size: clamp(54px, 11vw, 136px);
+  font-size: clamp(52px, 12vw, 112px);
   font-weight: 700;
   line-height: 0.9;
   letter-spacing: 0;
@@ -96,8 +103,8 @@ button {
 }
 
 .lede {
-  max-width: 620px;
-  margin: 24px 0 0;
+  max-width: 520px;
+  margin: 16px auto 0;
   color: var(--muted);
   font-size: clamp(18px, 2vw, 24px);
   line-height: 1.45;
@@ -430,7 +437,6 @@ legend,
   }
 
   #menuScreen.screen-active {
-    align-items: start;
     grid-template-columns: 1fr;
   }
 
