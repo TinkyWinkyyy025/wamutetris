@@ -1,17 +1,17 @@
 :root {
   color-scheme: light;
-  --ink: #253047;
-  --muted: #667085;
-  --paper: #fffaf2;
+  --ink: #2f3437;
+  --muted: #777f86;
+  --paper: #f6f3ee;
   --panel: #ffffff;
-  --line: #e6e2d9;
-  --mint: #8bdcc2;
-  --peach: #ffb38a;
-  --lemon: #ffd966;
-  --sky: #86c7f2;
-  --rose: #ff8fb3;
-  --violet: #b8a6ff;
-  --shadow: 0 16px 40px rgba(37, 48, 71, 0.14);
+  --line: #ded9d0;
+  --mint: #bfd8cc;
+  --peach: #ead0bd;
+  --lemon: #ebe0b7;
+  --sky: #c6d9e6;
+  --rose: #e4c3cc;
+  --violet: #d2cbe3;
+  --shadow: 0 14px 32px rgba(47, 52, 55, 0.1);
   --shell-pad: clamp(10px, 2vw, 24px);
   --board-size: clamp(82px, min(calc(50vh - 125px), calc(100vw - 44px)), 390px);
   --duo-board-size: clamp(64px, min(calc(50vh - 143px), calc(50vw - 23px)), 330px);
@@ -29,10 +29,7 @@ body {
   min-height: 100vh;
   color: var(--ink);
   font-family: "Fredoka", ui-rounded, "Nunito", "Comic Sans MS", system-ui, sans-serif;
-  background:
-    radial-gradient(circle at 14% 18%, rgba(255, 217, 102, 0.48), transparent 22rem),
-    radial-gradient(circle at 86% 22%, rgba(139, 220, 194, 0.48), transparent 24rem),
-    linear-gradient(135deg, #fffaf2 0%, #f4fbff 100%);
+  background: var(--paper);
 }
 
 button,
@@ -100,7 +97,7 @@ button {
   font-weight: 700;
   line-height: 0.9;
   letter-spacing: 0;
-  text-shadow: 0 5px 0 rgba(255, 217, 102, 0.75);
+  text-shadow: 0 4px 0 rgba(222, 217, 208, 0.9);
 }
 
 .lede {
@@ -113,7 +110,7 @@ button {
 
 .eyebrow {
   margin: 0 0 10px;
-  color: #a05a00;
+  color: #7f7060;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0;
@@ -124,9 +121,9 @@ button {
 .result-card {
   width: 100%;
   padding: clamp(12px, 3vw, 24px);
-  border: 1px solid rgba(230, 226, 217, 0.9);
+  border: 1px solid rgba(222, 217, 208, 0.95);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: var(--shadow);
 }
 
@@ -184,8 +181,8 @@ legend,
 }
 
 .segmented input:checked + span {
-  border-color: #232b3f;
-  background: var(--lemon);
+  border-color: #7f8f85;
+  background: #e9eee8;
 }
 
 .player-fields {
@@ -235,9 +232,9 @@ legend,
 
 .primary-button {
   width: 100%;
-  background: #253047;
-  color: #fff;
-  box-shadow: 0 10px 18px rgba(37, 48, 71, 0.2);
+  background: #68786f;
+  color: #fffdf8;
+  box-shadow: 0 10px 18px rgba(47, 52, 55, 0.12);
 }
 
 .secondary-button {
@@ -296,10 +293,10 @@ legend,
   min-width: 0;
   width: 100%;
   padding: 8px;
-  border: 1px solid rgba(230, 226, 217, 0.95);
+  border: 1px solid rgba(222, 217, 208, 0.95);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.93);
-  box-shadow: 0 8px 24px rgba(37, 48, 71, 0.1);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 22px rgba(47, 52, 55, 0.08);
 }
 
 .player-card.eliminated {
@@ -329,7 +326,7 @@ legend,
 .pill {
   padding: 3px 6px;
   border-radius: 999px;
-  background: #f1f4f8;
+  background: #f0eee9;
   color: var(--ink);
   font-size: 11px;
   font-weight: 700;
@@ -363,18 +360,18 @@ legend,
 .mini-canvas {
   width: 38px;
   height: 38px;
-  border: 2px solid #eef0f4;
+  border: 2px solid #e7e3dc;
   border-radius: 8px;
-  background: #fbfcff;
+  background: #fbfaf7;
 }
 
 .line-clear-wrap {
   display: grid;
   min-height: 38px;
   place-items: center;
-  border: 2px solid #eef0f4;
+  border: 2px solid #e7e3dc;
   border-radius: 8px;
-  background: #fff8dc;
+  background: #f4efe3;
 }
 
 .line-clear-wrap strong {
@@ -397,9 +394,9 @@ legend,
   height: auto;
   margin: 0 auto;
   aspect-ratio: 1 / 2;
-  border: 3px solid #253047;
+  border: 3px solid #5f6b64;
   border-radius: 8px;
-  background: #fffdf8;
+  background: #fffdfa;
   touch-action: none;
 }
 
@@ -414,7 +411,7 @@ legend,
   min-height: 34px;
   border: 0;
   border-radius: 8px;
-  background: #edf4ff;
+  background: #edf1ef;
   color: var(--ink);
   font-size: 12px;
   font-weight: 700;
@@ -423,7 +420,7 @@ legend,
 .status-line {
   min-height: 16px;
   margin: 5px 0 0;
-  color: #9d3b44;
+  color: #8a5d61;
   font-size: 12px;
   font-weight: 700;
 }
@@ -455,7 +452,7 @@ legend,
 .ranking-list li {
   padding: 10px 12px;
   border-radius: 8px;
-  background: #f7f9fc;
+  background: #f3f1ec;
 }
 
 .result-actions {
