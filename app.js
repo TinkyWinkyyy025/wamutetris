@@ -152,8 +152,8 @@ function clearLines(player) {
 
   player.lines += lines;
   player.combo++;
-  const lineScores = [0, 100, 300, 500, 800];
-  player.score += lineScores[lines] + Math.max(0, player.combo) * 50;
+  const lineScores = [0, 40, 100, 300, 1200];
+  player.score += lineScores[lines] * state.level;
   player.status = lines === 4 ? "Tetris!" : `${lines} line${lines > 1 ? "s" : ""}`;
   beep(520 + lines * 80, 0.06);
   return lines;
