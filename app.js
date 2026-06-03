@@ -466,7 +466,7 @@ function createPlayerCard(player) {
       <button type="button" data-action="rotate" aria-label="Rotate right" title="Rotate right">&#8635;</button>
       <button type="button" data-action="hold" aria-label="Hold block" title="Hold block">&#9208;</button>
       <button type="button" data-action="left" aria-label="Move left" title="Move left">&#8592;</button>
-      <button type="button" data-action="down" aria-label="Soft drop" title="Soft drop">&#8595;</button>
+      <button type="button" data-action="drop" aria-label="Hard drop" title="Hard drop">&#10515;</button>
       <button type="button" data-action="right" aria-label="Move right" title="Move right">&#8594;</button>
     </div>
     <p class="status-line" data-status></p>
@@ -486,7 +486,6 @@ function performAction(player, action) {
   if (action === "right") move(player, 1);
   if (action === "rotate") rotate(player);
   if (action === "rotateBack") rotate(player, true);
-  if (action === "down") softDrop(player);
   if (action === "drop") hardDrop(player);
   if (action === "hold") holdPiece(player);
 }
