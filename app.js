@@ -467,7 +467,7 @@ function createPlayerCard(player) {
       <button type="button" data-action="rotateBack" aria-label="Rotate left" title="Rotate left: Z">&#8634;</button>
       <button type="button" data-action="rotate" aria-label="Rotate right" title="Rotate right: Up Arrow">&#8635;</button>
       <button type="button" data-action="hold" aria-label="Hold block" title="Hold: C">&#9208;</button>
-      <button type="button" data-action="softDrop" aria-label="Soft drop" title="Soft drop: Down Arrow"><span class="soft-drop-icon" aria-hidden="true"></span></button>
+      <button type="button" data-action="softDrop" aria-label="Soft drop" title="Soft drop: Down Arrow">&#8595;</button>
       <button type="button" data-action="drop" aria-label="Hard drop" title="Hard drop: Space">&#10515;</button>
     </div>
     <p class="status-line" data-status></p>
