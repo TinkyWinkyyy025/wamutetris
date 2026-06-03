@@ -315,6 +315,27 @@ legend,
   line-height: 1;
 }
 
+.room-code-badge {
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 6px;
+  align-items: center;
+  margin: 0 0 5px;
+  padding: 5px 8px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: #fbf1ed;
+  color: var(--ink);
+  font-size: clamp(12px, 1.7vw, 16px);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.room-code-badge strong {
+  letter-spacing: 2px;
+}
+
 .header-actions {
   display: flex;
   gap: 10px;

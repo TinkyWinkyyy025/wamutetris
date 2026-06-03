@@ -60,6 +60,7 @@ const submitButton = document.querySelector("#submitButton");
 const roomActionButtons = document.querySelector("#roomActionButtons");
 const boardsEl = document.querySelector("#boards");
 const modeLabel = document.querySelector("#modeLabel");
+const roomCodeBadge = document.querySelector("#roomCodeBadge");
 const pauseButton = document.querySelector("#pauseButton");
 const menuButton = document.querySelector("#menuButton");
 const winnerTitle = document.querySelector("#winnerTitle");
@@ -519,7 +520,10 @@ function buildPlayerFields() {
   playerFields.dataset.mode = mode;
   submitButton.hidden = mode === "multiplayer";
   roomActionButtons.hidden = mode !== "multiplayer";
-  if (mode !== "multiplayer") selectedRoomAction = "create";
+  if (mode !== "multiplayer") {
+    selectedRoomAction = "create";
+    roomCodeInput.value = "";
+  }
   joinRoomField.hidden = mode !== "multiplayer" || selectedRoomAction !== "join";
   roomCodeInput.required = !joinRoomField.hidden;
   const existing = Array.from(playerFields.querySelectorAll(".player-row")).map((row) => ({
@@ -611,7 +615,9 @@ function startGame(config = collectSetup()) {
     state.players.push(player);
   });
 
-  modeLabel.textContent = config.mode === "vs" ? `Multiplayer room ${config.roomCode}` : "Individual mode";
+  modeLabel.textContent = config.mode === "vs" ? "Multiplayer room" : "Individual mode";
+  roomCodeBadge.hidden = config.mode !== "vs";
+  roomCodeBadge.querySelector("strong").textContent = config.roomCode || "";
   pauseButton.textContent = "Pause";
   showScreen(gameScreen);
   lastFrame = 0;
@@ -694,6 +700,7 @@ setupForm.addEventListener("submit", (event) => {
   playerFields.querySelectorAll('input[type="text"]').forEach((input) => input.setCustomValidity(""));
   const requestedRoomAction = event.submitter?.name === "roomAction" ? event.submitter.value : selectedRoomAction;
   if (data.get("mode") === "multiplayer") selectedRoomAction = requestedRoomAction;
+  if (data.get("mode") === "multiplayer" && selectedRoomAction === "create") roomCodeInput.value = "";
 
   if (data.get("mode") === "multiplayer" && selectedRoomAction === "join" && joinRoomField.hidden) {
     buildPlayerFields();
