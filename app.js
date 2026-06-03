@@ -444,6 +444,10 @@ function createPlayerCard(player) {
           <span>Hold</span>
           <canvas class="mini-canvas hold-canvas" width="56" height="56"></canvas>
         </div>
+        <div class="mini-wrap line-clear-wrap">
+          <span>Lines</span>
+          <strong data-lines>0</strong>
+        </div>
       </div>
       <canvas class="board-canvas" width="${COLS * CELL}" height="${ROWS * CELL}"></canvas>
       <div class="preview-stack next-stack">
@@ -456,9 +460,6 @@ function createPlayerCard(player) {
           <canvas class="mini-canvas next-canvas" width="56" height="56"></canvas>
         </div>
       </div>
-    </div>
-    <div class="bottom-stats">
-      <span class="pill">Line clears <strong data-lines>0</strong></span>
     </div>
     <div class="touch-controls" aria-label="${escapeHtml(player.name)} controls">
       <button type="button" data-action="left">L</button>

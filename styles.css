@@ -368,6 +368,21 @@ legend,
   background: #fbfcff;
 }
 
+.line-clear-wrap {
+  display: grid;
+  min-height: 38px;
+  place-items: center;
+  border: 2px solid #eef0f4;
+  border-radius: 8px;
+  background: #fff8dc;
+}
+
+.line-clear-wrap strong {
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+}
+
 .board-row {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr) 42px;
@@ -386,12 +401,6 @@ legend,
   border-radius: 8px;
   background: #fffdf8;
   touch-action: none;
-}
-
-.bottom-stats {
-  display: flex;
-  justify-content: center;
-  margin-top: 5px;
 }
 
 .touch-controls {
@@ -533,6 +542,14 @@ legend,
   .boards[data-count="2"] .mini-canvas {
     width: 30px;
     height: 30px;
+  }
+
+  .boards[data-count="2"] .line-clear-wrap {
+    min-height: 30px;
+  }
+
+  .boards[data-count="2"] .line-clear-wrap strong {
+    font-size: 14px;
   }
 
   .boards[data-count="2"] .mini-wrap span {
