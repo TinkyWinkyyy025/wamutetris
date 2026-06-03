@@ -15,36 +15,13 @@
         <div class="brand-panel">
           <p class="eyebrow">Wamu Cafe game table</p>
           <h1>Wamu Tetris</h1>
-          <p class="lede">A bright multiplayer block game for kids, families, and cafe events.</p>
+          <p class="lede">A bright block game for kids, families, and cafe events.</p>
         </div>
 
         <form id="setupForm" class="setup-panel">
-          <fieldset>
-            <legend>Mode</legend>
-            <div class="segmented">
-              <label>
-                <input type="radio" name="mode" value="individual" checked />
-                <span>Individual</span>
-              </label>
-              <label>
-                <input type="radio" name="mode" value="multiplayer" />
-                <span>Multiplayer</span>
-              </label>
-            </div>
-          </fieldset>
-
-          <div id="joinRoomField" class="room-code-field" hidden>
-            <label class="field-label" for="roomCodeInput">Room Code</label>
-            <input id="roomCodeInput" type="text" name="roomCode" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off" placeholder="ABC123" />
-          </div>
-
           <div id="playerFields" class="player-fields"></div>
 
           <button id="submitButton" class="primary-button" type="submit">Start Game</button>
-          <div id="roomActionButtons" class="room-action-buttons" hidden>
-            <button class="primary-button" type="submit" name="roomAction" value="create">Create Room</button>
-            <button class="secondary-button" type="submit" name="roomAction" value="join">Join Room</button>
-          </div>
         </form>
       </section>
 
@@ -52,7 +29,6 @@
         <header class="game-header">
           <div>
             <p id="modeLabel" class="eyebrow">Individual mode</p>
-            <p id="roomCodeBadge" class="room-code-badge" hidden>Room code <strong></strong></p>
             <h2>Wamu Tetris</h2>
           </div>
           <div class="header-actions">

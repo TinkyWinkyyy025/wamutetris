@@ -42,11 +42,6 @@ const PIECE_COLORS = {
 
 const KEYMAP = [
   { left: "ArrowLeft", right: "ArrowRight", rotate: "ArrowUp", rotateBack: "KeyZ", softDrop: "ArrowDown", drop: "Space", hold: "KeyC" },
-  { left: "KeyA", right: "KeyD", rotate: "KeyW", rotateBack: "KeyS", softDrop: "KeyX", drop: "KeyV", hold: "KeyB" },
-  { left: "KeyJ", right: "KeyL", rotate: "KeyI", rotateBack: "KeyK", softDrop: "KeyM", drop: "KeyU", hold: "KeyO" },
-  { left: "Numpad4", right: "Numpad6", rotate: "Numpad8", rotateBack: "Numpad5", softDrop: "Numpad2", drop: "Numpad0", hold: "Numpad7" },
-  { left: "Digit1", right: "Digit3", rotate: "Digit2", rotateBack: "KeyQ", softDrop: "Digit4", drop: "Digit5", hold: "Digit6" },
-  { left: "KeyF", right: "KeyH", rotate: "KeyT", rotateBack: "KeyR", softDrop: "KeyG", drop: "KeyY", hold: "Digit7" },
 ];
 
 const menuScreen = document.querySelector("#menuScreen");
@@ -54,13 +49,8 @@ const gameScreen = document.querySelector("#gameScreen");
 const resultScreen = document.querySelector("#resultScreen");
 const setupForm = document.querySelector("#setupForm");
 const playerFields = document.querySelector("#playerFields");
-const joinRoomField = document.querySelector("#joinRoomField");
-const roomCodeInput = document.querySelector("#roomCodeInput");
-const submitButton = document.querySelector("#submitButton");
-const roomActionButtons = document.querySelector("#roomActionButtons");
 const boardsEl = document.querySelector("#boards");
 const modeLabel = document.querySelector("#modeLabel");
-const roomCodeBadge = document.querySelector("#roomCodeBadge");
 const pauseButton = document.querySelector("#pauseButton");
 const menuButton = document.querySelector("#menuButton");
 const winnerTitle = document.querySelector("#winnerTitle");
@@ -72,7 +62,6 @@ let state = null;
 let animationId = 0;
 let lastFrame = 0;
 let audioContext = null;
-let selectedRoomAction = "create";
 
 function makeEmptyBoard() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(""));
@@ -166,30 +155,6 @@ function clearLines(player) {
   return lines;
 }
 
-function addGarbage(player, count) {
-  for (let i = 0; i < count; i++) {
-    player.board.shift();
-    const gap = Math.floor(Math.random() * COLS);
-    player.board.push(Array.from({ length: COLS }, (_, x) => (x === gap ? "" : "#b9c2cf")));
-  }
-  if (collides(player)) eliminate(player, "Garbage hit");
-}
-
-function attacksFor(lines, combo) {
-  if (lines < 2) return 0;
-  const base = lines === 2 ? 1 : lines === 3 ? 2 : 4;
-  return base + (combo > 0 ? 1 : 0);
-}
-
-function sendAttack(source, lines) {
-  if (state.mode !== "vs") return;
-  const garbage = attacksFor(lines, source.combo);
-  if (!garbage) return;
-  const targets = state.players.filter((player) => !player.dead && player.id !== source.id);
-  targets.forEach((target) => addGarbage(target, garbage));
-  source.status = `Sent ${garbage} garbage`;
-}
-
 function spawnPiece(player) {
   player.piece = player.nextPieces.shift();
   resetPiecePosition(player.piece);
@@ -204,8 +169,7 @@ function eliminate(player, message) {
   player.status = message;
   beep(170, 0.12);
   const living = state.players.filter((item) => !item.dead);
-  if (state.mode === "vs" && living.length <= 1) finishGame();
-  if (state.mode === "individual" && living.length === 0) finishGame();
+  if (living.length === 0) finishGame();
 }
 
 function move(player, dir) {
@@ -270,8 +234,7 @@ function holdPiece(player) {
 
 function lockPiece(player) {
   mergePiece(player);
-  const lines = clearLines(player);
-  sendAttack(player, lines);
+  clearLines(player);
   spawnPiece(player);
 }
 
@@ -409,7 +372,7 @@ function tick(timestamp) {
 
   if (!state.paused) {
     state.elapsed += delta;
-    state.level = 1 + Math.floor(state.elapsed / (state.mode === "vs" ? 45000 : 60000));
+    state.level = 1 + Math.floor(state.elapsed / 60000);
     state.dropInterval = Math.max(130, 850 - (state.level - 1) * 90);
 
     state.players.forEach((player) => {
@@ -502,71 +465,39 @@ function performAction(player, action) {
 function resolveKeyAction(code) {
   const playerIndex = KEYMAP.findIndex((map) => Object.values(map).includes(code));
   if (playerIndex < 0) return null;
-  if (!state.players[playerIndex]) return null;
   const map = KEYMAP[playerIndex];
   const action = Object.entries(map).find(([, mappedCode]) => mappedCode === code)?.[0];
   if (!action) return null;
-  if (state.players.length === 1 && playerIndex === 0) {
-    return { player: state.players[0], action };
-  }
-  if (state.players.length === 1) return null;
-  return { player: state.players[playerIndex], action };
+  return { player: state.players[0], action };
 }
 
 function buildPlayerFields() {
-  const data = new FormData(setupForm);
-  const mode = data.get("mode");
-  const count = mode === "individual" ? 1 : 6;
-  playerFields.dataset.mode = mode;
-  submitButton.hidden = mode === "multiplayer";
-  roomActionButtons.hidden = mode !== "multiplayer";
-  if (mode !== "multiplayer") {
-    selectedRoomAction = "create";
-    roomCodeInput.value = "";
-  }
-  joinRoomField.hidden = mode !== "multiplayer" || selectedRoomAction !== "join";
-  roomCodeInput.required = !joinRoomField.hidden;
-  const existing = Array.from(playerFields.querySelectorAll(".player-row")).map((row) => ({
-    name: row.querySelector('input[type="text"]').value,
-    color: row.querySelector('input[type="color"]').value,
-  }));
+  const existingRow = playerFields.querySelector(".player-row");
+  const existing = {
+    name: existingRow?.querySelector('input[type="text"]').value,
+    color: existingRow?.querySelector('input[type="color"]').value,
+  };
   playerFields.innerHTML = "";
-  for (let i = 0; i < count; i++) {
-    const row = document.createElement("div");
-    row.className = "player-row";
-    const inputId = `playerName${i}`;
-    const defaultName = mode === "individual" || i < 2 ? `Player ${i + 1}` : "";
-    const placeholder = mode === "individual" || i < 2 ? `Player ${i + 1}` : `Open slot ${i + 1}`;
-    row.innerHTML = `
-      <label class="field-label" for="${inputId}">${mode === "individual" ? "Player" : `Slot ${i + 1}`}</label>
-      <input id="${inputId}" type="text" name="name${i}" value="${escapeHtml(existing[i]?.name ?? defaultName)}" maxlength="16" placeholder="${escapeHtml(placeholder)}" />
-      <input class="color-choice" type="color" name="color${i}" value="${existing[i]?.color || COLORS[i]}" aria-label="Player ${i + 1} colour" />
-    `;
-    playerFields.append(row);
-  }
+  const row = document.createElement("div");
+  row.className = "player-row";
+  row.innerHTML = `
+    <label class="field-label" for="playerName0">Player</label>
+    <input id="playerName0" type="text" name="name0" value="${escapeHtml(existing.name || "Player 1")}" maxlength="16" placeholder="Player 1" />
+    <input class="color-choice" type="color" name="color0" value="${existing.color || COLORS[0]}" aria-label="Player colour" />
+  `;
+  playerFields.append(row);
 }
 
 function collectSetup() {
   const data = new FormData(setupForm);
-  const selectedMode = data.get("mode");
-  const mode = selectedMode === "multiplayer" ? "vs" : "individual";
-  const roomAction = selectedRoomAction;
-  const count = mode === "individual" ? 1 : 6;
-  const enteredCode = String(data.get("roomCode") || "").trim().toUpperCase();
-  const players = Array.from({ length: count }, (_, index) => {
-    const name = String(data.get(`name${index}`) || "").trim();
-    if (mode === "vs" && !name) return null;
-    return {
-      name: name || `Player ${index + 1}`,
-      accent: data.get(`color${index}`) || COLORS[index],
-    };
-  }).filter(Boolean);
-
   return {
-    mode,
-    roomAction: mode === "vs" ? roomAction : null,
-    roomCode: mode === "vs" ? (roomAction === "join" ? enteredCode : generateRoomCode()) : "",
-    players,
+    mode: "individual",
+    players: [
+      {
+        name: String(data.get("name0") || "").trim() || "Player 1",
+        accent: data.get("color0") || COLORS[0],
+      },
+    ],
   };
 }
 
@@ -615,9 +546,7 @@ function startGame(config = collectSetup()) {
     state.players.push(player);
   });
 
-  modeLabel.textContent = config.mode === "vs" ? "Multiplayer room" : "Individual mode";
-  roomCodeBadge.hidden = config.mode !== "vs";
-  roomCodeBadge.querySelector("strong").textContent = config.roomCode || "";
+  modeLabel.textContent = "Individual mode";
   pauseButton.textContent = "Pause";
   showScreen(gameScreen);
   lastFrame = 0;
@@ -628,7 +557,6 @@ function finishGame() {
   state.finished = true;
   cancelAnimationFrame(animationId);
   const ranking = [...state.players].sort((a, b) => {
-    if (state.mode === "vs" && a.dead !== b.dead) return a.dead ? 1 : -1;
     return b.score - a.score;
   });
   const winner = ranking[0];
@@ -639,22 +567,6 @@ function finishGame() {
   beep(660, 0.08);
   setTimeout(() => beep(880, 0.1), 90);
   showScreen(resultScreen);
-}
-
-function generateRoomCode() {
-  const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const numbers = "23456789";
-  const pool = `${letters}${numbers}`;
-  const code = [letters[Math.floor(Math.random() * letters.length)], numbers[Math.floor(Math.random() * numbers.length)]];
-
-  while (code.length < 6) {
-    const next = pool[Math.floor(Math.random() * pool.length)];
-    if (!code.includes(next)) code.push(next);
-  }
-
-  return code
-    .sort(() => Math.random() - 0.5)
-    .join("");
 }
 
 function showScreen(screen) {
@@ -688,51 +600,10 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-setupForm.addEventListener("change", (event) => {
-  if (event.target.name === "players" || event.target.name === "mode") {
-    buildPlayerFields();
-  }
-});
-
 setupForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const data = new FormData(setupForm);
   playerFields.querySelectorAll('input[type="text"]').forEach((input) => input.setCustomValidity(""));
-  const requestedRoomAction = event.submitter?.name === "roomAction" ? event.submitter.value : selectedRoomAction;
-  if (data.get("mode") === "multiplayer") selectedRoomAction = requestedRoomAction;
-  if (data.get("mode") === "multiplayer" && selectedRoomAction === "create") roomCodeInput.value = "";
-
-  if (data.get("mode") === "multiplayer" && selectedRoomAction === "join" && joinRoomField.hidden) {
-    buildPlayerFields();
-    roomCodeInput.focus();
-    return;
-  }
-
-  if (data.get("mode") === "multiplayer" && selectedRoomAction === "join") {
-    const roomCode = roomCodeInput.value.trim().toUpperCase();
-    if (!/^[A-Z0-9]{6}$/.test(roomCode)) {
-      roomCodeInput.setCustomValidity("Enter a 6-character room code.");
-      roomCodeInput.reportValidity();
-      return;
-    }
-    roomCodeInput.value = roomCode;
-  }
-  roomCodeInput.setCustomValidity("");
-  if (data.get("mode") === "multiplayer") {
-    const filledPlayers = Array.from({ length: 6 }, (_, index) => String(data.get(`name${index}`) || "").trim()).filter(Boolean);
-    if (filledPlayers.length < 2) {
-      const playerInput = setupForm.querySelector('input[name="name1"]');
-      playerInput.setCustomValidity("Add at least 2 players to start.");
-      playerInput.reportValidity();
-      return;
-    }
-  }
   startGame();
-});
-
-roomCodeInput.addEventListener("input", () => {
-  roomCodeInput.setCustomValidity("");
-  roomCodeInput.value = roomCodeInput.value.toUpperCase();
 });
 
 playerFields.addEventListener("input", (event) => {

@@ -17,7 +17,6 @@
   --duo-board-size: clamp(64px, min(calc(50vh - 143px), calc(50vw - 23px)), 330px);
   --board-size: clamp(82px, min(calc(50dvh - 125px), calc(100vw - 44px)), 390px);
   --duo-board-size: clamp(64px, min(calc(50dvh - 143px), calc(50vw - 23px)), 330px);
-  --multi-board-size: clamp(52px, min(calc(50dvh - 128px), calc(16vw - 22px)), 170px);
 }
 
 * {
@@ -194,45 +193,10 @@ legend,
   background: #fbf1ed;
 }
 
-.room-code-field {
-  margin: 0 0 12px;
-}
-
-.room-code-field input {
-  width: min(100%, 220px);
-  padding: 10px 12px;
-  border: 2px solid var(--line);
-  border-radius: 8px;
-  color: var(--ink);
-  font: inherit;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.room-action-buttons {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.room-action-buttons .primary-button,
-.room-action-buttons .secondary-button {
-  width: 100%;
-  padding: 0 10px;
-}
-
 .player-fields {
   display: grid;
   gap: 8px;
   margin: 0 0 14px;
-}
-
-.player-fields[data-mode="multiplayer"] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
 }
 
 .player-row {
@@ -242,17 +206,8 @@ legend,
   align-items: center;
 }
 
-.player-fields[data-mode="multiplayer"] .player-row {
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px;
-}
-
 .player-row .field-label {
   margin: 0;
-}
-
-.player-fields[data-mode="multiplayer"] .field-label {
-  display: none;
 }
 
 .player-row input[type="text"] {
@@ -315,27 +270,6 @@ legend,
   line-height: 1;
 }
 
-.room-code-badge {
-  display: inline-grid;
-  grid-auto-flow: column;
-  gap: 6px;
-  align-items: center;
-  margin: 0 0 5px;
-  padding: 5px 8px;
-  border: 2px solid var(--line);
-  border-radius: 8px;
-  background: #fbf1ed;
-  color: var(--ink);
-  font-size: clamp(12px, 1.7vw, 16px);
-  font-weight: 700;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.room-code-badge strong {
-  letter-spacing: 2px;
-}
-
 .header-actions {
   display: flex;
   gap: 10px;
@@ -361,50 +295,6 @@ legend,
 .boards[data-count="2"] {
   max-width: calc(var(--duo-board-size) + var(--duo-board-size) + 206px);
   grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 96px)));
-}
-
-.boards[data-count="3"],
-.boards[data-count="4"],
-.boards[data-count="5"],
-.boards[data-count="6"] {
-  max-width: 100%;
-}
-
-.boards[data-count="3"] {
-  grid-template-columns: repeat(3, minmax(0, calc(var(--multi-board-size) + 18px)));
-}
-
-.boards[data-count="4"] {
-  grid-template-columns: repeat(4, minmax(0, calc(var(--multi-board-size) + 18px)));
-}
-
-.boards[data-count="5"] {
-  grid-template-columns: repeat(5, minmax(0, calc(var(--multi-board-size) + 18px)));
-}
-
-.boards[data-count="6"] {
-  grid-template-columns: repeat(6, minmax(0, calc(var(--multi-board-size) + 18px)));
-}
-
-.boards[data-count="3"] .board-canvas,
-.boards[data-count="4"] .board-canvas,
-.boards[data-count="5"] .board-canvas,
-.boards[data-count="6"] .board-canvas {
-  max-width: var(--multi-board-size);
-}
-
-.boards[data-count="3"] .board-row,
-.boards[data-count="4"] .board-row,
-.boards[data-count="5"] .board-row,
-.boards[data-count="6"] .board-row {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.boards[data-count="3"] .preview-stack,
-.boards[data-count="4"] .preview-stack,
-.boards[data-count="5"] .preview-stack,
-.boards[data-count="6"] .preview-stack {
-  display: none;
 }
 
 .player-card {
@@ -709,20 +599,6 @@ legend,
     grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 96px)));
   }
 
-  .boards[data-count="3"] {
-    grid-template-columns: repeat(3, minmax(0, calc(var(--multi-board-size) + 18px)));
-  }
-
-  .boards[data-count="3"],
-  .boards[data-count="4"],
-  .boards[data-count="5"],
-  .boards[data-count="6"] {
-    justify-content: center;
-  }
-
-  .boards[data-count="4"] {
-    grid-template-columns: repeat(4, minmax(0, calc(var(--multi-board-size) + 18px)));
-  }
 }
 
 @media (max-height: 620px) {
@@ -732,7 +608,6 @@ legend,
     --duo-board-size: clamp(50px, min(calc(50vh - 118px), calc(50vw - 14px)), 240px);
     --board-size: clamp(68px, min(calc(50dvh - 100px), calc(100vw - 24px)), 320px);
     --duo-board-size: clamp(50px, min(calc(50dvh - 118px), calc(50vw - 14px)), 240px);
-    --multi-board-size: clamp(44px, min(calc(50dvh - 112px), calc(16vw - 18px)), 140px);
   }
 
   .brand-panel h1 {
@@ -825,7 +700,6 @@ legend,
     --duo-board-size: clamp(54px, min(calc(50vh - 126px), calc(50vw - 14px)), 260px);
     --board-size: clamp(70px, min(calc(50dvh - 105px), calc(100vw - 20px)), 360px);
     --duo-board-size: clamp(54px, min(calc(50dvh - 126px), calc(50vw - 14px)), 260px);
-    --multi-board-size: clamp(40px, min(calc(50dvh - 118px), calc(16vw - 16px)), 120px);
   }
 
   .segmented.compact {
