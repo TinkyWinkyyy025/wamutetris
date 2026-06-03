@@ -462,13 +462,13 @@ function createPlayerCard(player) {
       </div>
     </div>
     <div class="touch-controls" aria-label="${escapeHtml(player.name)} controls">
-      <button type="button" data-action="right" aria-label="Move right" title="Move right: Right Arrow">&#8594;</button>
       <button type="button" data-action="left" aria-label="Move left" title="Move left: Left Arrow">&#8592;</button>
-      <button type="button" data-action="rotate" aria-label="Rotate right" title="Rotate right: Up Arrow">&#8593;</button>
-      <button type="button" data-action="rotateBack" aria-label="Rotate left" title="Rotate left: Z">Z</button>
-      <button type="button" data-action="softDrop" aria-label="Soft drop" title="Soft drop: Down Arrow">&#8595;</button>
+      <button type="button" data-action="right" aria-label="Move right" title="Move right: Right Arrow">&#8594;</button>
+      <button type="button" data-action="rotateBack" aria-label="Rotate left" title="Rotate left: Z">&#8634;</button>
+      <button type="button" data-action="rotate" aria-label="Rotate right" title="Rotate right: Up Arrow">&#8635;</button>
+      <button type="button" data-action="hold" aria-label="Hold block" title="Hold: C">&#9208;</button>
+      <button type="button" data-action="softDrop" aria-label="Soft drop" title="Soft drop: Down Arrow">&#8650;</button>
       <button type="button" data-action="drop" aria-label="Hard drop" title="Hard drop: Space">&#10515;</button>
-      <button type="button" data-action="hold" aria-label="Hold block" title="Hold: C">C</button>
     </div>
     <p class="status-line" data-status></p>
   `;
