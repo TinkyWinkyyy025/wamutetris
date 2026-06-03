@@ -436,6 +436,9 @@ function createPlayerCard(player) {
           <span class="pill">Level <strong data-level>1</strong></span>
         </div>
       </div>
+    </div>
+    <div class="board-row">
+      <canvas class="board-canvas" width="${COLS * CELL}" height="${ROWS * CELL}"></canvas>
       <div class="preview-stack">
         <div class="mini-wrap">
           <span>Hold</span>
@@ -447,7 +450,6 @@ function createPlayerCard(player) {
         </div>
       </div>
     </div>
-    <canvas class="board-canvas" width="${COLS * CELL}" height="${ROWS * CELL}"></canvas>
     <div class="touch-controls" aria-label="${escapeHtml(player.name)} controls">
       <button type="button" data-action="left">L</button>
       <button type="button" data-action="right">R</button>

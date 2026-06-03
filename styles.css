@@ -283,13 +283,13 @@ legend,
 }
 
 .boards[data-count="1"] {
-  max-width: var(--board-size);
-  grid-template-columns: minmax(0, var(--board-size));
+  max-width: calc(var(--board-size) + 48px);
+  grid-template-columns: minmax(0, calc(var(--board-size) + 48px));
 }
 
 .boards[data-count="2"] {
-  max-width: calc(var(--duo-board-size) + var(--duo-board-size) + 14px);
-  grid-template-columns: repeat(2, minmax(0, var(--duo-board-size)));
+  max-width: calc(var(--duo-board-size) + var(--duo-board-size) + 110px);
+  grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 48px)));
 }
 
 .player-card {
@@ -308,7 +308,6 @@ legend,
 
 .player-top {
   display: grid;
-  grid-template-columns: 1fr auto;
   gap: 8px;
   align-items: start;
   margin-bottom: 6px;
@@ -338,8 +337,9 @@ legend,
 
 .preview-stack {
   display: grid;
-  grid-template-columns: repeat(2, 42px);
-  gap: 5px;
+  grid-template-columns: 42px;
+  align-content: start;
+  gap: 8px;
   text-align: center;
 }
 
@@ -358,6 +358,13 @@ legend,
   border: 2px solid #eef0f4;
   border-radius: 8px;
   background: #fbfcff;
+}
+
+.board-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  gap: 6px;
+  align-items: start;
 }
 
 .board-canvas {
@@ -483,8 +490,8 @@ legend,
   }
 
   .boards[data-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: min(100%, calc(var(--duo-board-size) + var(--duo-board-size) + 12px));
+    grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 36px)));
+    max-width: min(100%, calc(var(--duo-board-size) + var(--duo-board-size) + 84px));
   }
 
   .boards[data-count="2"] .board-canvas {
@@ -499,8 +506,23 @@ legend,
     grid-template-columns: 1fr;
   }
 
+  .boards[data-count="2"] .board-row {
+    grid-template-columns: minmax(0, 1fr) 32px;
+  }
+
   .boards[data-count="2"] .preview-stack {
-    display: none;
+    display: grid;
+    grid-template-columns: 32px;
+    gap: 4px;
+  }
+
+  .boards[data-count="2"] .mini-canvas {
+    width: 30px;
+    height: 30px;
+  }
+
+  .boards[data-count="2"] .mini-wrap span {
+    font-size: 9px;
   }
 
   .boards[data-count="2"] .stats {
@@ -533,7 +555,7 @@ legend,
 
 @media (min-width: 1180px) {
   .boards[data-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, var(--duo-board-size)));
+    grid-template-columns: repeat(2, minmax(0, calc(var(--duo-board-size) + 48px)));
   }
 
   .boards[data-count="3"] {
@@ -606,6 +628,10 @@ legend,
 
   .player-top {
     margin-bottom: 4px;
+  }
+
+  .board-row {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .preview-stack {
