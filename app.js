@@ -41,10 +41,10 @@ const PIECE_COLORS = {
 };
 
 const KEYMAP = [
-  { left: "KeyA", right: "KeyD", rotate: "KeyW", down: "KeyS", drop: "Space", hold: "KeyC" },
-  { left: "ArrowLeft", right: "ArrowRight", rotate: "ArrowUp", down: "ArrowDown", drop: "Enter", hold: "ShiftRight" },
-  { left: "KeyJ", right: "KeyL", rotate: "KeyI", down: "KeyK", drop: "KeyU", hold: "KeyO" },
-  { left: "Numpad4", right: "Numpad6", rotate: "Numpad8", down: "Numpad5", drop: "Numpad0", hold: "Numpad7" },
+  { left: "KeyA", right: "KeyD", rotate: "KeyW", rotateBack: "KeyS", drop: "Space", hold: "KeyC" },
+  { left: "ArrowLeft", right: "ArrowRight", rotate: "ArrowUp", rotateBack: "ArrowDown", drop: "Enter", hold: "ShiftRight" },
+  { left: "KeyJ", right: "KeyL", rotate: "KeyI", rotateBack: "KeyK", drop: "KeyU", hold: "KeyO" },
+  { left: "Numpad4", right: "Numpad6", rotate: "Numpad8", rotateBack: "Numpad5", drop: "Numpad0", hold: "Numpad7" },
 ];
 
 const menuScreen = document.querySelector("#menuScreen");
@@ -105,6 +105,10 @@ function resetPiecePosition(piece) {
 
 function rotateMatrix(matrix) {
   return matrix[0].map((_, x) => matrix.map((row) => row[x]).reverse());
+}
+
+function rotateMatrixBack(matrix) {
+  return matrix[0].map((_, x) => matrix.map((row) => row[row.length - 1 - x]));
 }
 
 function collides(player, piece = player.piece, offsetX = 0, offsetY = 0) {
@@ -223,9 +227,12 @@ function hardDrop(player) {
   lockPiece(player);
 }
 
-function rotate(player) {
+function rotate(player, reverse = false) {
   if (!canAct(player)) return;
-  const rotated = { ...player.piece, shape: rotateMatrix(player.piece.shape) };
+  const rotated = {
+    ...player.piece,
+    shape: reverse ? rotateMatrixBack(player.piece.shape) : rotateMatrix(player.piece.shape),
+  };
   const kicks = [0, -1, 1, -2, 2];
   for (const kick of kicks) {
     if (!collides(player, rotated, kick, 0)) {
@@ -444,8 +451,8 @@ function createPlayerCard(player) {
     <div class="touch-controls" aria-label="${escapeHtml(player.name)} controls">
       <button type="button" data-action="left">L</button>
       <button type="button" data-action="right">R</button>
-      <button type="button" data-action="rotate">Turn</button>
-      <button type="button" data-action="down">Down</button>
+      <button type="button" data-action="rotate">Turn R</button>
+      <button type="button" data-action="rotateBack">Turn L</button>
       <button type="button" data-action="drop">Drop</button>
       <button type="button" data-action="hold">C</button>
     </div>
@@ -465,7 +472,7 @@ function performAction(player, action) {
   if (action === "left") move(player, -1);
   if (action === "right") move(player, 1);
   if (action === "rotate") rotate(player);
-  if (action === "down") softDrop(player);
+  if (action === "rotateBack") rotate(player, true);
   if (action === "drop") hardDrop(player);
   if (action === "hold") holdPiece(player);
 }
