@@ -41,8 +41,8 @@ const PIECE_COLORS = {
 };
 
 const KEYMAP = [
-  { left: "KeyA", right: "KeyD", rotate: "KeyW", rotateBack: "KeyS", drop: "Space", hold: "KeyC" },
-  { left: "ArrowLeft", right: "ArrowRight", rotate: "ArrowUp", rotateBack: "ArrowDown", drop: "Enter", hold: "ShiftRight" },
+  { left: "ArrowLeft", right: "ArrowRight", rotate: "ArrowUp", rotateBack: "KeyZ", softDrop: "ArrowDown", drop: "Space", hold: "KeyC" },
+  { left: "KeyA", right: "KeyD", rotate: "KeyW", rotateBack: "KeyS", softDrop: "KeyX", drop: "KeyV", hold: "KeyB" },
   { left: "KeyJ", right: "KeyL", rotate: "KeyI", rotateBack: "KeyK", drop: "KeyU", hold: "KeyO" },
   { left: "Numpad4", right: "Numpad6", rotate: "Numpad8", rotateBack: "Numpad5", drop: "Numpad0", hold: "Numpad7" },
 ];
@@ -462,12 +462,13 @@ function createPlayerCard(player) {
       </div>
     </div>
     <div class="touch-controls" aria-label="${escapeHtml(player.name)} controls">
-      <button type="button" data-action="rotateBack" aria-label="Rotate left" title="Rotate left">&#8634;</button>
-      <button type="button" data-action="rotate" aria-label="Rotate right" title="Rotate right">&#8635;</button>
-      <button type="button" data-action="hold" aria-label="Hold block" title="Hold block">&#9208;</button>
-      <button type="button" data-action="left" aria-label="Move left" title="Move left">&#8592;</button>
-      <button type="button" data-action="drop" aria-label="Hard drop" title="Hard drop">&#10515;</button>
-      <button type="button" data-action="right" aria-label="Move right" title="Move right">&#8594;</button>
+      <button type="button" data-action="right" aria-label="Move right" title="Move right: Right Arrow">&#8594;</button>
+      <button type="button" data-action="left" aria-label="Move left" title="Move left: Left Arrow">&#8592;</button>
+      <button type="button" data-action="rotate" aria-label="Rotate right" title="Rotate right: Up Arrow">&#8593;</button>
+      <button type="button" data-action="rotateBack" aria-label="Rotate left" title="Rotate left: Z">Z</button>
+      <button type="button" data-action="softDrop" aria-label="Soft drop" title="Soft drop: Down Arrow">&#8595;</button>
+      <button type="button" data-action="drop" aria-label="Hard drop" title="Hard drop: Space">&#10515;</button>
+      <button type="button" data-action="hold" aria-label="Hold block" title="Hold: C">C</button>
     </div>
     <p class="status-line" data-status></p>
   `;
@@ -486,6 +487,7 @@ function performAction(player, action) {
   if (action === "right") move(player, 1);
   if (action === "rotate") rotate(player);
   if (action === "rotateBack") rotate(player, true);
+  if (action === "softDrop") softDrop(player);
   if (action === "drop") hardDrop(player);
   if (action === "hold") holdPiece(player);
 }
@@ -496,9 +498,10 @@ function resolveKeyAction(code) {
   const map = KEYMAP[playerIndex];
   const action = Object.entries(map).find(([, mappedCode]) => mappedCode === code)?.[0];
   if (!action) return null;
-  if (state.players.length === 1 && (playerIndex === 0 || playerIndex === 1)) {
+  if (state.players.length === 1 && playerIndex === 0) {
     return { player: state.players[0], action };
   }
+  if (state.players.length === 1) return null;
   return { player: state.players[playerIndex], action };
 }
 
