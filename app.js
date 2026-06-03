@@ -53,6 +53,10 @@ const resultScreen = document.querySelector("#resultScreen");
 const setupForm = document.querySelector("#setupForm");
 const playerFields = document.querySelector("#playerFields");
 const playerCountFieldset = document.querySelector("#playerCountFieldset");
+const roomActionFieldset = document.querySelector("#roomActionFieldset");
+const joinRoomField = document.querySelector("#joinRoomField");
+const roomCodeInput = document.querySelector("#roomCodeInput");
+const submitButton = document.querySelector("#submitButton");
 const boardsEl = document.querySelector("#boards");
 const modeLabel = document.querySelector("#modeLabel");
 const pauseButton = document.querySelector("#pauseButton");
@@ -510,6 +514,11 @@ function buildPlayerFields() {
   const mode = data.get("mode");
   const count = mode === "individual" ? 1 : Number(data.get("players"));
   playerCountFieldset.hidden = mode === "individual";
+  roomActionFieldset.hidden = mode === "individual";
+  joinRoomField.hidden = mode !== "multiplayer" || data.get("roomAction") !== "join";
+  roomCodeInput.required = !joinRoomField.hidden;
+  submitButton.textContent =
+    mode === "individual" ? "Start Game" : data.get("roomAction") === "join" ? "Join Room" : "Create Room";
   const existing = Array.from(playerFields.querySelectorAll(".player-row")).map((row) => ({
     name: row.querySelector('input[type="text"]').value,
     color: row.querySelector('input[type="color"]').value,
@@ -530,10 +539,15 @@ function buildPlayerFields() {
 
 function collectSetup() {
   const data = new FormData(setupForm);
-  const mode = data.get("mode");
+  const selectedMode = data.get("mode");
+  const mode = selectedMode === "multiplayer" ? "vs" : "individual";
+  const roomAction = data.get("roomAction");
   const count = mode === "individual" ? 1 : Number(data.get("players"));
+  const enteredCode = String(data.get("roomCode") || "").trim().toUpperCase();
   return {
     mode,
+    roomAction: mode === "vs" ? roomAction : null,
+    roomCode: mode === "vs" ? (roomAction === "join" ? enteredCode : generateRoomCode()) : "",
     players: Array.from({ length: count }, (_, index) => ({
       name: (data.get(`name${index}`) || `Player ${index + 1}`).trim() || `Player ${index + 1}`,
       accent: data.get(`color${index}`) || COLORS[index],
@@ -586,7 +600,7 @@ function startGame(config = collectSetup()) {
     state.players.push(player);
   });
 
-  modeLabel.textContent = config.mode === "vs" ? "VS mode" : "Individual mode";
+  modeLabel.textContent = config.mode === "vs" ? `Multiplayer room ${config.roomCode}` : "Individual mode";
   pauseButton.textContent = "Pause";
   showScreen(gameScreen);
   lastFrame = 0;
@@ -608,6 +622,22 @@ function finishGame() {
   beep(660, 0.08);
   setTimeout(() => beep(880, 0.1), 90);
   showScreen(resultScreen);
+}
+
+function generateRoomCode() {
+  const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const numbers = "23456789";
+  const pool = `${letters}${numbers}`;
+  const code = [letters[Math.floor(Math.random() * letters.length)], numbers[Math.floor(Math.random() * numbers.length)]];
+
+  while (code.length < 6) {
+    const next = pool[Math.floor(Math.random() * pool.length)];
+    if (!code.includes(next)) code.push(next);
+  }
+
+  return code
+    .sort(() => Math.random() - 0.5)
+    .join("");
 }
 
 function showScreen(screen) {
@@ -642,12 +672,30 @@ function escapeHtml(value) {
 }
 
 setupForm.addEventListener("change", (event) => {
-  if (event.target.name === "players" || event.target.name === "mode") buildPlayerFields();
+  if (event.target.name === "players" || event.target.name === "mode" || event.target.name === "roomAction") {
+    buildPlayerFields();
+  }
 });
 
 setupForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  const data = new FormData(setupForm);
+  if (data.get("mode") === "multiplayer" && data.get("roomAction") === "join") {
+    const roomCode = roomCodeInput.value.trim().toUpperCase();
+    if (!/^[A-Z0-9]{6}$/.test(roomCode)) {
+      roomCodeInput.setCustomValidity("Enter a 6-character room code.");
+      roomCodeInput.reportValidity();
+      return;
+    }
+    roomCodeInput.value = roomCode;
+  }
+  roomCodeInput.setCustomValidity("");
   startGame();
+});
+
+roomCodeInput.addEventListener("input", () => {
+  roomCodeInput.setCustomValidity("");
+  roomCodeInput.value = roomCodeInput.value.toUpperCase();
 });
 
 pauseButton.addEventListener("click", () => {
