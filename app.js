@@ -529,14 +529,9 @@ function startGame(config = createDefaultConfig()) {
 function finishGame() {
   state.finished = true;
   cancelAnimationFrame(animationId);
-  const ranking = [...state.players].sort((a, b) => {
-    return b.score - a.score;
-  });
-  const winner = ranking[0];
-  winnerTitle.textContent = `${winner.name} wins!`;
-  rankingList.innerHTML = ranking
-    .map((player) => `<li>${escapeHtml(player.name)} - ${player.score} pts - ${player.lines} lines</li>`)
-    .join("");
+  const player = state.players[0];
+  winnerTitle.textContent = "Game Over";
+  rankingList.innerHTML = `<li>Lines cleared: ${player.lines}</li>`;
   beep(660, 0.08);
   setTimeout(() => beep(880, 0.1), 90);
   showScreen(resultScreen);
