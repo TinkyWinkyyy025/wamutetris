@@ -176,6 +176,14 @@ function move(player, dir) {
   if (!collides(player, player.piece, dir, 0)) player.piece.x += dir;
 }
 
+function moveToColumn(player, targetX) {
+  if (!canAct(player)) return;
+  const dir = Math.sign(targetX - player.piece.x);
+  while (dir && player.piece.x !== targetX && !collides(player, player.piece, dir, 0)) {
+    player.piece.x += dir;
+  }
+}
+
 function softDrop(player) {
   if (!canAct(player)) return;
   if (!collides(player, player.piece, 0, 1)) {
@@ -454,6 +462,47 @@ function performAction(player, action) {
   if (action === "hold") holdPiece(player);
 }
 
+function setupBoardPointerControls(player) {
+  let drag = null;
+
+  player.canvas.addEventListener("pointerdown", (event) => {
+    if (!canAct(player)) return;
+    event.preventDefault();
+    player.canvas.setPointerCapture(event.pointerId);
+    drag = {
+      pointerId: event.pointerId,
+      startClientX: event.clientX,
+      startPieceX: player.piece.x,
+      moved: false,
+    };
+  });
+
+  player.canvas.addEventListener("pointermove", (event) => {
+    if (!drag || drag.pointerId !== event.pointerId || !canAct(player)) return;
+    event.preventDefault();
+    const rect = player.canvas.getBoundingClientRect();
+    const cellWidth = rect.width / COLS;
+    const columnDelta = Math.round((event.clientX - drag.startClientX) / cellWidth);
+    if (!columnDelta) return;
+    drag.moved = true;
+    moveToColumn(player, drag.startPieceX + columnDelta);
+    render();
+  });
+
+  player.canvas.addEventListener("pointerup", (event) => {
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    player.canvas.releasePointerCapture(event.pointerId);
+    if (!drag.moved) performAction(player, "rotate");
+    drag = null;
+    render();
+  });
+
+  player.canvas.addEventListener("pointercancel", () => {
+    drag = null;
+  });
+}
+
 function resolveKeyAction(code) {
   const playerIndex = KEYMAP.findIndex((map) => Object.values(map).includes(code));
   if (playerIndex < 0) return null;
@@ -511,11 +560,7 @@ function startGame(config = createDefaultConfig()) {
     player.card = card;
     player.canvas = card.querySelector(".board-canvas");
     player.ctx = player.canvas.getContext("2d");
-    player.canvas.addEventListener("pointerdown", (event) => {
-      event.preventDefault();
-      performAction(player, "rotate");
-      render();
-    });
+    setupBoardPointerControls(player);
     player.holdCanvas = card.querySelector(".hold-canvas");
     player.holdCtx = player.holdCanvas.getContext("2d");
     player.nextCanvases = Array.from(card.querySelectorAll(".next-canvas"));
