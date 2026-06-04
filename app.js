@@ -511,6 +511,11 @@ function startGame(config = createDefaultConfig()) {
     player.card = card;
     player.canvas = card.querySelector(".board-canvas");
     player.ctx = player.canvas.getContext("2d");
+    player.canvas.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      performAction(player, "rotate");
+      render();
+    });
     player.holdCanvas = card.querySelector(".hold-canvas");
     player.holdCtx = player.holdCanvas.getContext("2d");
     player.nextCanvases = Array.from(card.querySelectorAll(".next-canvas"));
