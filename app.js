@@ -180,7 +180,6 @@ function softDrop(player) {
   if (!canAct(player)) return;
   if (!collides(player, player.piece, 0, 1)) {
     player.piece.y++;
-    player.score += 1;
     return;
   }
   lockPiece(player);
@@ -193,7 +192,6 @@ function hardDrop(player) {
     player.piece.y++;
     distance++;
   }
-  player.score += distance * 2;
   lockPiece(player);
 }
 
@@ -377,11 +375,6 @@ function tick(timestamp) {
     state.players.forEach((player) => {
       if (player.dead) return;
       player.dropClock += delta;
-      player.survivalClock += delta;
-      if (player.survivalClock >= 10000) {
-        player.survivalClock -= 10000;
-        player.score += 10;
-      }
       if (player.dropClock >= state.dropInterval) {
         player.dropClock = 0;
         softDrop(player);
@@ -511,7 +504,6 @@ function startGame(config = createDefaultConfig()) {
       lines: 0,
       combo: -1,
       dropClock: 0,
-      survivalClock: 0,
       dead: false,
       status: "",
     };
